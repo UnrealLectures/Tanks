@@ -1,0 +1,19 @@
+Concept
+--------
+- Tank battle in an open-world head-to-head tank combat game
+- The terrain will be used for tactical advantage
+- The focus is on flow and feel
+
+Rules
+-----
+- You can move anywhere in the terrain, which is surrounded by mountains
+- Both players start with finite health and ammo
+- Each direct hit takes away health
+- Last man standing wins
+
+Requirements
+------------
+- SFX: Gun firing, explosion, barrel moving, turret moving, engine sound
+- Static mesh: Simple tank comprising tracks, body, turret and barrel
+- Textures: Later-on we'll want to add for visual flare 
+- Music: Background music to create tension
