@@ -33,7 +33,7 @@ void ATankAIController::Tick(float DeltaTime)
 {
   Super::Tick(DeltaTime);
 
-  if (GetPlayerTank())
+  if (GetPlayerTank() && GetControlledTank())
   {
     // TODO Move towards the player
 
