@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-
-#include "Kismet/GameplayStatics.h"
-
 #include "TankAimingComponent.generated.h"
 
 class UTankBarrel;

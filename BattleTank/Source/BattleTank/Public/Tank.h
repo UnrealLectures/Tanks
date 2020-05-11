@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-
-#include "TankAimingComponent.h"
-
 #include "Tank.generated.h"
 
+// Forward Declarations
+class UTankAimingComponent;
 class UTankBarrel;
 
 UCLASS()
@@ -22,9 +21,6 @@ public:
 
   UFUNCTION(BlueprintCallable, Category = Setup)
   void SetBarrelReference(UTankBarrel *BarrelToSet);
-
-  // Called every frame
-  virtual void Tick(float DeltaTime) override;
 
   // Called to bind functionality to input
   virtual void SetupPlayerInputComponent(class UInputComponent *PlayerInputComponent) override;
