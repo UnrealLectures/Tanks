@@ -1,17 +1,17 @@
 // Copyright Jeff Brown 2020.
 
 #include "TankPlayerController.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 
 void ATankPlayerController::BeginPlay()
 {
   Super::BeginPlay();
-  auto AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-  if (AimingComponent)
+  auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+  if (!AimingComponent)
   {
-    FoundAimingComponent(AimingComponent);
+    return;
   }
+  FoundAimingComponent(AimingComponent);
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -20,15 +20,11 @@ void ATankPlayerController::Tick(float DeltaTime)
   AimTowardsCrosshair();
 }
 
-ATank *ATankPlayerController::GetControlledTank() const
-{
-  return Cast<ATank>(GetPawn());
-}
-
 void ATankPlayerController::AimTowardsCrosshair()
 {
   // Exit if no tank is controlled
-  if (!GetControlledTank())
+  auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+  if (!AimingComponent)
   {
     return;
   }
@@ -38,8 +34,8 @@ void ATankPlayerController::AimTowardsCrosshair()
   // If it hits the landscape...
   if (GetSightRayHitLocation(HitLocation)) // Has a "side-effect", is going to line trace
   {
-    // TODO: Tell controlled tank to aim at this point
-    GetControlledTank()->AimAt(HitLocation);
+    // Tell controlled tank to aim at this point
+    AimingComponent->AimAt(HitLocation);
   }
 }
 
