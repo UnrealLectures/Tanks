@@ -1,9 +1,10 @@
 // Copyright Jeff Brown 2020.
 
-#include "Tank.h"
 #include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
+#include "Tank.h"
 
 // Sets default values
 ATank::ATank()
