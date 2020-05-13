@@ -44,28 +44,17 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
   }
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel *BarrelToSet)
+void UTankAimingComponent::Initialize(UTankTurret *TurretToSet, UTankBarrel *BarrelToSet)
 {
-  if (!BarrelToSet)
-  {
-    return;
-  }
-  Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret *TurretToSet)
-{
-  if (!TurretToSet)
-  {
-    return;
-  }
   Turret = TurretToSet;
+  Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
   // If game is paused do not update movement
-  if (GetWorld()->IsPaused())
+  // If barrel or turret isn't set do not update movement
+  if (GetWorld()->IsPaused() || !Barrel || !Turret)
   {
     return;
   }
