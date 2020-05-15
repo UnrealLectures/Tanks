@@ -26,7 +26,11 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 {
   Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-  if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+  if (RoundsLeft <= 0)
+  {
+    FiringState = EFiringState::OutOfAmmo;
+  }
+  else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
   {
     FiringState = EFiringState::Reloading;
   }
@@ -38,6 +42,22 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
   {
     FiringState = EFiringState::Locked;
   }
+}
+
+void UTankAimingComponent::Initialize(UTankTurret *TurretToSet, UTankBarrel *BarrelToSet)
+{
+  Turret = TurretToSet;
+  Barrel = BarrelToSet;
+}
+
+EFiringState UTankAimingComponent::GetFiringState()
+{
+  return FiringState;
+}
+
+int UTankAimingComponent::GetRoundsLeft() const
+{
+  return RoundsLeft;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
@@ -70,12 +90,6 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
   }
 }
 
-void UTankAimingComponent::Initialize(UTankTurret *TurretToSet, UTankBarrel *BarrelToSet)
-{
-  Turret = TurretToSet;
-  Barrel = BarrelToSet;
-}
-
 void UTankAimingComponent::MoveBarrelTowards(FVector IntendAimDirection)
 {
   // If game is paused do not update movement
@@ -91,7 +105,16 @@ void UTankAimingComponent::MoveBarrelTowards(FVector IntendAimDirection)
   auto DeltaRotator = AimAsRotator - BarrelRotator;
 
   Barrel->Elevate(DeltaRotator.Pitch);
-  Turret->Rotate(DeltaRotator.Yaw);
+
+  // Always yaw shortest distance
+  if (FMath::Abs(DeltaRotator.Yaw) < 180)
+  {
+    Turret->Rotate(DeltaRotator.Yaw);
+  }
+  else
+  {
+    Turret->Rotate(-DeltaRotator.Yaw);
+  }
 }
 
 bool UTankAimingComponent::IsBarrelMoving()
@@ -108,7 +131,7 @@ bool UTankAimingComponent::IsBarrelMoving()
 void UTankAimingComponent::Fire()
 {
 
-  if (FiringState != EFiringState::Reloading)
+  if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming)
   {
     if (!(Barrel && ProjectileBlueprint) || GetWorld()->IsPaused())
     {
@@ -121,7 +144,8 @@ void UTankAimingComponent::Fire()
         Barrel->GetSocketRotation(FName("Projectile")));
 
     // Launch Projectile
-    Projectile->LaunchProjectile(LaunchSpeed); // TODO Uncomment this
+    Projectile->LaunchProjectile(LaunchSpeed);
     LastFireTime = FPlatformTime::Seconds();
+    RoundsLeft--;
   }
 }
