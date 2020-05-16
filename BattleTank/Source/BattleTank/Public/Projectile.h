@@ -6,7 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/StaticMeshComponent.h"
-//#include "Components/PrimitiveComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -19,9 +19,6 @@ public:
   // Sets default values for this actor's properties
   AProjectile();
 
-  // Called every frame
-  virtual void Tick(float DeltaTime) override;
-
   // Launch projectile
   void LaunchProjectile(float Speed);
 
@@ -32,9 +29,26 @@ protected:
 private:
   UProjectileMovementComponent *ProjectileMovement = nullptr;
 
-  UPROPERTY(VisibleANywhere, Category = "Components")
+  UPROPERTY(EditDefaultsOnly, Category = "Setup")
+  float DestroyDelay = 10; // 10 second default delay to destroy projectile
+
+  //UPROPERTY(VisibleAnywhere, Category = "Components")
+  //USceneComponent *ProjRootComp = nullptr;
+
+  UPROPERTY(VisibleAnywhere, Category = "Components")
   UStaticMeshComponent *CollisionMesh = nullptr;
 
-  UPROPERTY(EditAnywhere, Category = "Components")
+  UPROPERTY(VisibleAnywhere, Category = "Components")
+  UParticleSystemComponent *ExplosionBlast = nullptr;
+
+  UPROPERTY(VisibleAnywhere, Category = "Components")
   UParticleSystemComponent *LaunchBlast = nullptr;
+
+  UPROPERTY(VisibleAnywhere, Category = "Components")
+  URadialForceComponent *ExplosionForce = nullptr;
+
+  UFUNCTION(BlueprintCallable, Category = "Event")
+  void OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpulse, const FHitResult &Hit);
+
+  void OnTimerExpire();
 };
