@@ -7,6 +7,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -32,8 +33,8 @@ private:
   UPROPERTY(EditDefaultsOnly, Category = "Setup")
   float DestroyDelay = 10; // 10 second default delay to destroy projectile
 
-  //UPROPERTY(VisibleAnywhere, Category = "Components")
-  //USceneComponent *ProjRootComp = nullptr;
+  UPROPERTY(EditDefaultsOnly, Category = "Setup")
+  float ProjectileDamage = 20.f; // Default damage
 
   UPROPERTY(VisibleAnywhere, Category = "Components")
   UStaticMeshComponent *CollisionMesh = nullptr;
